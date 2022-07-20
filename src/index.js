@@ -117,4 +117,11 @@ app.delete('/account', cpfAccountExists, (req, res) => {
    return res.status(200).json(customers);
 });
 
+app.get('/account/balance', cpfAccountExists, (req, res) => {
+   const { customer } = req;
+   
+   return res.json({ balance: getBalance(customer.statement) });
+
+});
+
 app.listen('3000', () => console.log(`Server running on port: 3000!`));
