@@ -84,6 +84,17 @@ app.post('/withdraw', cpfAccountExists, (req, res) => {
    return res.status(201).send();
 });
 
+app.get('/statement/date', cpfAccountExists, (req, res) => {
+   const { customer } = req;
+   const { date } = req.query;
+   
+   const formatDate = new Date(date + " 00:00");
+
+   const statements = customer.statement.filter((operation) => operation.create_at.toDateString() === new Date(formatDate).toDateString());
+   
+   return res.json(statements);
+});
+
 
 
 
