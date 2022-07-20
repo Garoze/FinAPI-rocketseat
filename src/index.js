@@ -95,6 +95,19 @@ app.get('/statement/date', cpfAccountExists, (req, res) => {
    return res.json(statements);
 });
 
+app.put('/account', cpfAccountExists, (req, res) => {
+   const { name } = req.body;
+   const { customer } = req;
+
+   customer.name = name;
+   return res.status(201).send();
+});
+
+app.get('/account', cpfAccountExists, (req, res) => {
+   const { customer } = req;
+
+   return res.json(customer);
+});
 
 
 
