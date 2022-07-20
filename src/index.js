@@ -36,4 +36,20 @@ app.get('/statement/', cpfAccountExists, (req, res) => {
    return res.json(customer.statement);
 });
 
+app.post('/deposit', cpfAccountExists, (req, res) => {
+   const { customer } = req; 
+   const { description, amount } = req.body; 
+   
+   const operation = {
+      description,
+      amount,
+      create_at: new Date(),
+      type: "credit",
+   }
+   
+   customer.statement.push(operation);
+
+   return res.status(201).send();
+});
+
 app.listen('3000', () => console.log(`Server running on port: 3000!`));
