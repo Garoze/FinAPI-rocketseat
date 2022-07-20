@@ -109,12 +109,12 @@ app.get('/account', cpfAccountExists, (req, res) => {
    return res.json(customer);
 });
 
+app.delete('/account', cpfAccountExists, (req, res) => {
+   const { customer } = req;
 
+   customers.splice(customer, 1);
 
-
-
-
-
-
+   return res.status(200).json(customers);
+});
 
 app.listen('3000', () => console.log(`Server running on port: 3000!`));
