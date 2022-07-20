@@ -18,6 +18,18 @@ const cpfAccountExists = (req, res, next) => {
    return next();
 }
 
+const getBalance = (statement) => {
+   const balance = statement.reduce((acc, operation) => {
+      if (operation.type === 'credit') {
+         return acc + operation.amount;
+      } else {
+         return acc - operation.amount;
+      }
+   }, 0);
+
+   return balance;
+}
+
 app.post('/account', (req, res) => {
   const { name, cpf } = req.body;
 
@@ -51,5 +63,34 @@ app.post('/deposit', cpfAccountExists, (req, res) => {
 
    return res.status(201).send();
 });
+
+app.post('/withdraw', cpfAccountExists, (req, res) => {
+   const { customer } = req;
+   const { amount } = req.body;
+   
+   const customerBalance = getBalance(customer.statement);
+   if (customerBalance < amount) {
+      res.status(400).json({ error: 'insufficient funds'});
+   }
+
+   const operation = {
+      amount,
+      create_at: new Date(),
+      type: 'debit'
+   }
+
+   customer.statement.push(operation);
+
+   return res.status(201).send();
+});
+
+
+
+
+
+
+
+
+
 
 app.listen('3000', () => console.log(`Server running on port: 3000!`));
